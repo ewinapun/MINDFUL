@@ -1,0 +1,10 @@
+# Probabilistic Retrospective Inference of Targets (PRI-T)
+
+This repo is associated with this manuscript, preprint and dataset.
+This repo contains code for running MINDFUL, to measure instabilities in neural data for useful long-term iBCI, 
+described in the paper ["Long-term unsupervised recalibration of cursor BCIs"](https://www.biorxiv.org/content/10.1101/2023.02.03.527022v1).
+
+<img src="/resources/PRIT_example.gif" width=50% height=50%>
+
+Navigate over to `examples/` to run MINDFUL_main_script.m.
+
