@@ -37,7 +37,7 @@ classdef PlotTunings
             obj.selected_feats = (1:obj.nfeat);
         end
 
-        function [hFig, k] = PlotExampleTuning(obj, ch, options)
+        function [hFig, clrs] = PlotExampleTuning(obj, ch, options)
         % plot tuning curves across sessions
             arguments
                 obj PlotTunings
@@ -69,17 +69,17 @@ classdef PlotTunings
             end
             
             rmv = 1;
-            k = brewermap(size(tuning.pval, 2) + rmv * 2,'RdYlBu');
-            mid = ceil(length(k)/2);
-            k(mid-rmv:mid+rmv,:)=[]; k = flipud(k);
-            k = vertcat(k(1,:)*0.5,k);
+            c = brewermap(obj.nday + rmv * 2,'RdYlBu');
+            mid = ceil(length(c)/2);clrs = c;
+            clrs(mid-rmv:mid+rmv,:)=[]; clrs = flipud(clrs);
+            clrs = vertcat(c(end,:)*0.5,clrs);
             
             x = (-180:180); % discretize angles
             y = squeeze(tuning.b(ch,1,options.day)) + ...
                 squeeze(tuning.b(ch,2,options.day)) * cosd(x) + ...
                 squeeze(tuning.b(ch,3,options.day)) * sind(x);
             hLine = plot(x,y,'Tag','Signal');
-            set(hLine,{'Color'},num2cell(k(options.day,:),2),'LineWidth',1.5);
+            set(hLine,{'Color'},num2cell(clrs(options.day,:),2),'LineWidth',1.5);
             
             bin_ymax = 0;
             if ~strcmp(options.style,'cosine') % add binned feature average
@@ -94,8 +94,8 @@ classdef PlotTunings
                     shadedErrorBar(binstyle.xi, ...
                     biny(:,ch,day), binstyle.CIs(:,ch,day) ...
                     ,'lineprops',{ ...
-                    'Color', k(day,:), ...
-                    'markerfacecolor',k(day,:), ...
+                    'Color', clrs(day,:), ...
+                    'markerfacecolor',clrs(day,:), ...
                     'LineWidth',1.5, ...
                     },'patchSaturation',0.1);
                 end   
@@ -133,7 +133,7 @@ classdef PlotTunings
             % set colorbar
             if ~isempty(options.colorbar)
                 axh = gca();
-                colormap(axh,k); 
+                colormap(axh,clrs); 
                 cbh = colorbar();
                 ylabel(cbh,'Days')
                 clim = cbh.Limits;

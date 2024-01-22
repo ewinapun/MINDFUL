@@ -21,6 +21,7 @@ function savepdf(gcf, filename, opt)
     end
     % save as pdf
     set(gcf,'Units','inches');
+    set(gcf, 'InvertHardcopy', 'off');
     screenposition = get(gcf,'Position');
     set(gcf,...
         'PaperPosition',[0 0 screenposition(3:4)],...

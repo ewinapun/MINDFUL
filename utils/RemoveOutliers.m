@@ -114,7 +114,7 @@ if opt.feat.enable
     [data,featFilled, lthresh, uthresh] = FillFeatureOutliers(orgData, opt);
         
     %%
-     opt.plot.ch = 47;
+%      opt.plot.ch = 47;
     if ~isempty(opt.plot.ch)
         PlotPlayPlace(orgData, opt, opt.plot.ch)
     end

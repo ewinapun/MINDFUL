@@ -1,14 +1,19 @@
 %% code for figures in the MINDFUL paper
 % Copyright Ewina Pun, All Rights Reserved
 
+% add MINDFUL repo to path
+filePath  = mfilename('fullpath');
+addpath(genpath(fileparts(fileparts(filePath))))
+
 % set up data path were the data is
 dirpath = 'Z:\data';
-participant = 'T5'; % T11 or T5
-path = [dirpath, filesep, participant, 'FixedDecoder_new'];
+participant = 'T11'; % T11 or T5
+path = [dirpath, filesep, participant, 'FixedDecoder'];
+saveGenFigure = 1; % set to true if want to save output figures
 
+% figure settings
 set(0,'defaultAxesFontSize',20)
 c = get(groot,'DefaultAxesColorOrder');
-% SetDefaultFigureToolbar()
 set(groot,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k','k'})
 
 % concatenate parsed data

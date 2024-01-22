@@ -1,16 +1,20 @@
 %% params sweep
+clear k params
+
+params.excludeNonTrials = 0; % change to true to exclude outlier trials
+params.winlen = 3000;
+params.updateHz = 50;
+params.xlabelFromDay0 = 1;
+params.pcaDim = 5;
+
+% instantiate the class
 k = MINDFUL(NDzc, event, info, params, extra);
 
 % get a lagged version of Xhat
+Xhat = extra.cursorVel;
 lag = 1;
 lagXhat = k.getlagX(Xhat, k.event.blockStartStop, lag);  
 
-% set reference segment
-if ismember(info.participant,'T5')
-    init_day = [1, 2];
-else
-    init_day = 1;
-end
 [refData, ind] = k.GetSessionData(init_day);
 header = ['session ',num2str(init_day)];
 
@@ -39,9 +43,10 @@ end
 k.GetMedianAEperSeg()
 fn = fieldnames(k.dist);
 sweep_winlen = k.PlotCompDistvsAE(1,'KLdiv',fn);
-% fsave(['sweep_winlen_',info.participant],'-struct','sweep_winlen')
+save(['sweep_winlen_',info.participant],'-struct','sweep_winlen')
 %% plot correlations for both participants
-t11 = load('sweep_winlen_T11');
+try
+    t11 = load('sweep_winlen_T11');
 t5 = load('sweep_winlen_T5');
 figure('units','inches','Position',[10 1 3.5 3],'defaultAxesfontsize',10.5, ...
     'DefaultLineLineWidth',2)
@@ -63,9 +68,9 @@ grid on
 xlabel('window length (seconds)')
 ylabel('Spearman correlation of KLD to AE')
 axis([-5 240 -0.3 1])
-savepdf(gcf,'sweep_WL')
+if saveGenFigure;savepdf(gcf,'sweep_WL');end
+end
 %% AE quantiles
-params.updateHz = 50;
 k = MINDFUL(NDzc, event, info, params, extra);
 
 % get a lagged version of Xhat
@@ -123,9 +128,25 @@ xlabel('AE quantiles')
 ylabel('Correlation of KLD to AE')
 grid on
 save(['sweepAE_',info.participant],'-struct','sweepAE')
-%% plot correlation for both participants
+%% plot Spearman correlation for both participants
 t11 = load('sweepAE_T11');
 t5 = load('sweepAE_T5');
+figure('units','inches','Position',[1 1 10 7],'defaultAxesfontsize',20)
+
+x = categorical(displabels);
+x = reordercats(x,displabels);
+h = bar(x,[t11.Spearman t5.Spearman],1);
+xtickangle(45)
+ylim([0.3 1])
+xline(1.5,'--','Color',[.5 .5 .5],'LineWidth',3)
+legend(h,'T11','T5')
+legend('boxoff')
+xlabel('AE quantiles')
+ylabel('Spearman correlation of KLD to AE')
+grid on
+savepdf(gcf,'sweepAE_T11_T5(Spearman)')
+
+% plot Pearson correlation for both participants
 figure('units','inches','Position',[1 1 10 7],'defaultAxesfontsize',20)
 x = categorical(displabels);
 x = reordercats(x,displabels);

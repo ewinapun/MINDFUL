@@ -1,4 +1,5 @@
 %% calculate tunings and p-values
+isBootstrap = 1;
 tstart = -5; % 100 ms before go cue
 tend = 50; % 1 second from go cue
 alltrialss = event.trialStartStop(~event.excludeTrials,:);
@@ -13,12 +14,18 @@ for day = 1:nday
     inds = RowColon([inds + tstart,inds + tend]);
     X2 = NDzc(inds,:);
     Y2 = labels(inds,:);
-    tune = RegressPerChBootstrap(X2,Y2);
+    if isBootstrap
+        tune = RegressPerChBootstrap(X2,Y2);
+    else 
+        tune = RegressPerCh(X2,Y2);
+    end
     tunings = ConcatStruct(tunings,tune,2);
 end
 tunings.b = reshape(tunings.b, [nfeats,3,nday]);
+if isBootstrap
 tunings.bootstrap.pd = reshape(tunings.bootstrap.pd, [nfeats,1000,nday]);
 tunings.bootstrap.md = reshape(tunings.bootstrap.md, [nfeats,1000,nday]);
+end
 % bin average feature values
 % pvalues_sigma = zeros(nfeats,nday);
 % pvalues_beta = zeros(nfeats,nday);
@@ -42,4 +49,5 @@ for day = 1:nday
 end
 tunings.binkr = binkr;
 tunings.binavg = binavg;
-save('tunings_NDzc.mat','tunings','xticksday','tstart','tend')
+% save('tunings_NDzc.mat','tunings','xticksday','tstart','tend')
+

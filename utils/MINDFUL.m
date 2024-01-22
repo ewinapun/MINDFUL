@@ -20,7 +20,7 @@ classdef MINDFUL < handle
 %     k.CalculatePCA(refData, refInd, header)
 %     k.SetReference(refData, refInd, header)
 %     k.CalcDistanceFromData('filename')
-%     k.PlotDistance()
+%     k.moveDirVectce()
 
 % % % alternate outside for loop to calc distance with user input data
 % % sTo = [];
@@ -35,7 +35,7 @@ classdef MINDFUL < handle
 % 
 % History:
 %   2021.02.19   created by Ewina Pun
-%   2022.08.25   last edit by Ewina Pun
+%   2024.01.21   last edit by Ewina Pun
 %
 %   Copyright Ewina Pun, All Rights Reserved
 
@@ -60,7 +60,7 @@ classdef MINDFUL < handle
             
             defaultParams.winlen = 3000; % window length (in time steps)
             defaultParams.updateHz = 1000; % frequency of updating a distance (in time steps) 
-            defaultParams.excludeNonTrials = 0; % true if include trial only data
+            defaultParams.excludeNonTrials = 0; % true if only include trial data
             defaultParams.gsmooth = 0; % window length for gaussian smooth data (in time steps)
             defaultParams.selected_sessions = []; % select some sessions
             defaultParams.dmetric = {'KLdiv', 'Bhatt', 'Wass'};
@@ -124,10 +124,9 @@ classdef MINDFUL < handle
             indSelected = [];
             selectedStart = [];
             if obj.params.excludeNonTrials
-                % exclude outlier trials
                 obj.event.trialStartStop(obj.event.excludeTrials,:) = [];
                 for i = 1: length(obj.info.blkInds)
-                    % exclude non-trial time steps
+                    % exclude non-trials time steps
                     bt = find(obj.event.trialStartStop(:,1)>=...
                         obj.event.blockStartStop(obj.info.blkInds(i),1),1,'first');
                     et = find(obj.event.trialStartStop(:,2)<=...
@@ -876,12 +875,12 @@ classdef MINDFUL < handle
             c(3,:) = [];
 
             if isempty(obj.mAE) && ~isempty(obj.extra.angleError)
-                obj.GetMedianAEperSeg()
+                obj.GetMedianAEperSeg();
             end
             
             % set indices to NaN if provided (in between sessions)
             if obj.params.setBtwDays2NaN
-                obj.SetIndstoNaN()
+                obj.SetIndstoNaN();
             end
             
             % looping over different measures
@@ -1049,11 +1048,11 @@ classdef MINDFUL < handle
                 fn = fieldnames(obj.dist);
             end
             if ~iscell(fn);fn = cellstr(fn);end
-            if ~iscell(fnDispName); fnDispName = cellstr(fnDispName); end
             if any(~isfield(obj.dist, fn))
                 error('One or more fieldname does not exist in struct m') 
             end
             if nargin < 4 || isempty(fnDispName); fnDispName = fn; end
+            if ~iscell(fnDispName); fnDispName = cellstr(fnDispName); end
             if nargin < 2; dfn = []; end
             [dfn, dfnStr] = CheckDistanceName(dfn);
             
@@ -1088,11 +1087,12 @@ classdef MINDFUL < handle
                 if length(fn) == 1 && size(y,1) == size(y,2)
                 % plot pairwise comparison with imagesc
                     plotPairwiseFlag = 1;
-                    mask = tril(NaN(obj.n));
+                    % set NaN for values not used for calculated meanKLD
+                    mask = tril(NaN(obj.n), -1);
                     y = y+mask;
-                    imagesc(y);
-                    colorbar
-                    set(gca,'YDir','reverse', 'Layer','top')      
+%                     y(isnan(y)) = -1;
+%                     imagesc(y)
+                    imagesc(y,'AlphaData',~isnan(y))
                 else
                     plotPairwiseFlag = 0;
                     for ii = 1:length(fn)
@@ -1124,20 +1124,24 @@ classdef MINDFUL < handle
                     % lineInds = obj.info.plot.lineInds;
                     % range = (lineInds(1)+1:lineInds(end));
                     clim([0 round(prctile(y, 99 ,'all')*1.1,1,'significant')])
+                    cbar = colorbar;
+%                     colormap([.25 .25 .25;colormap]);
+                    set(cbar,'YLim',[0 4])%cbar.YLim(2)]);
+                    set(gca,'YDir','reverse', 'Layer','top','Color',[1 1 1]*.25)
                 end
                 axis tight
             end
             if length(fn) > 1
                 legend()
             end
-            linkaxes(ax,'x')
+            linkaxes(ax,'xy')
         end
         
         function PlotPairwisePval(obj)
             % plot pairwise comparison with imagesc
             figure('Position',[0 0 570 500],'DefaultLineLineWidth',1.5)
             imagesc(obj.pval)
-            colorbar
+            cb = colorbar();
             set(gca,'YDir','reverse', 'Layer','top')
             % plotting details
             xlabel(obj.info.plot.xlabelstr)
@@ -1147,6 +1151,7 @@ classdef MINDFUL < handle
             yticks(obj.info.plot.tickInds)
             yticklabels(obj.info.plot.tickNames)
             clim([0 0.05])
+            ylabel(cb,'P-value')
             obj.AddTransitionLines('xy')
             axis tight
         end

@@ -61,7 +61,7 @@ events.sessionNumberPerBlock = [];
 events.uniqueGoalStateLabels = [];
 events.goalState = [];
 events.goalPosition = [];
-events.movedirVect = [];
+events.moveDirVect = [];
 events.gestGoalState = [];
 usedBlocks = {};
 
@@ -84,7 +84,7 @@ for k = 1:length(subFolders)
     %Concatenate events data
     
     events.excludeTrials = vertcat(events.excludeTrials, tmpEvents.excludeTrials);
-    events.movedirVect = vertcat(events.movedirVect, tmpEvents.movedirVect);
+    events.moveDirVect = vertcat(events.moveDirVect, tmpEvents.moveDirVect);
     events.gestGoalState = vertcat(events.gestGoalState, tmpEvents.gestGoalState);
 
 %     events.goalPosition = vertcat(events.goalPosition, tmpEvents.goalPosition);
@@ -146,7 +146,7 @@ events.pointsPerSession = 0;
 events.trialsPerBlock = [];
 events.excludeTrials = true(0);
 events.goalPosition = [];
-events.movedirVect = [];
+events.moveDirVect = [];
 events.gestGoalState = [];
 blocknum    = [];
 
@@ -192,30 +192,28 @@ for b = blocks
         end
     end
     data = double(data);
+
+    % rolling z-score
     if p.zscoreFeatures
         data = BGzscoreNew(data, p);
-%         data = zscore(data);
     end
+
+    %Concatenate data
     cat_ND = vertcat(cat_ND, data);
     cat_labels = vertcat(cat_labels, labels);
     cat_cursorVel = vertcat(cat_cursorVel, cursorVel);
     
-    extra.normVal = {};
-    if exist('normVal','var')
-        extra.normVal = ConcatStruct(extra.normVal, normVal);
-    end
-
     cat_extra = ConcatStruct(cat_extra, extra);
 
-    clear data   
+    clear data
     
     %Concatenate events data
     if exist('excludeTrials','var')
         events.excludeTrials = vertcat(events.excludeTrials, excludeTrials);
     end
-%     events.goalPosition = vertcat(events.goalPosition, goalPosition);    
+
     if exist('moveDirVect','var')
-        events.movedirVect = vertcat(events.movedirVect, moveDirVect);    
+        events.moveDirVect = vertcat(events.moveDirVect, moveDirVect);    
     end
     events.trialStartStop = vertcat(events.trialStartStop, ...
         startStops + events.pointsPerSession);

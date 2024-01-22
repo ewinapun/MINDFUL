@@ -1,5 +1,10 @@
 %% figure 4: dpca plot
 
+% get pairwise mean KLD between sessions
+if ~exist('pwmeanKL','var')
+    run pairwise_mean_KLD.m
+end
+%%
 tstart=8;tend=57;
 day = 1;
 feats = NDzc(RowColon(event.sessionStartStop(day,:)),:);
@@ -18,7 +23,7 @@ tnum = event.trialsPerSession(day);
 csTPS = [0; cumsum(event.trialsPerSession)];
 trialInds = csTPS(day)+1:csTPS(day+1);
 trialInds = trialInds(~event.excludeTrials(trialInds));
-[catMoveDir, uCatDirs] = ChangeDirsToCategorical(event.movedirVect, 0);
+[catMoveDir, uCatDirs] = ChangeDirsToCategorical(event.moveDirVect, 0);
 goalLabels = double(catMoveDir);
 % gcolors = clrs(goalLabels+1,:);
 
@@ -31,7 +36,6 @@ dirDepPC = find(dpcaOut.whichMarg==1);
 dirInDepPC = find(dpcaOut.whichMarg==2);
 
 %%
-pltwin = (tstart:tend);
 subplot(2,3,5)
 components = [dirDepPC(1),dirDepPC(2)];
 for dir = 1:8
@@ -98,10 +102,21 @@ for day = 1:length(event.pointsPerSession)
 end
 %% projection plot with VAF 
 components = [dirDepPC(1),dirDepPC(2)];
-figure('Units','inches','Position',[0 0 14 3])
-
-for day = 1:nday
-    subplot(ceil(nday/5),5,day)
+pltwin = (tstart:tend);
+if strcmp(info.participant,'T5')
+figure('Units','inches','Position',[0 0 12 2.4])
+elseif strcmp(info.participant,'T11')
+figure('Units','inches','Position',[0 0 15 9])
+end
+for i=1:5
+figure('Units','inches','Position',[0 0 15 9])
+for day = [0,5,10]+i
+    pltwin = (tstart:tend);
+    if strcmp(info.participant,'T5')
+        subplot(1,6,day)
+    elseif strcmp(info.participant,'T11')
+        subplot(3,5,day)
+    end
     meandir = zeros(length(pltwin),2,8);
     disp(['Projecting day ', num2str(day)])
     trialInds = csTPS(day)+1:csTPS(day+1);
@@ -121,26 +136,30 @@ for dir = 1:8
         plot(pltData(t,:,1),pltData(t,:,2),'Color',[(clrs(dir,:)) 0.1])
     end
 for dir = 1:8
-    plot(meandir(:,1,dir),meandir(:,2,dir),'Color',(clrs(dir,:)),'linewidth',3)
+    plot(meandir(:,1,dir),meandir(:,2,dir),'Color',(clrs(dir,:)),'linewidth',2)
 end
 end
-axis([-5 5 -2.5 2.5])
+if day == 1;axis tight;limaxis = axis;end
+axis(limaxis)
 axis off
-title([{['decoder day ',num2str(info.trialDay(day)-info.trialDay(1))]}...
-     ,{['(',num2str(sum(abs(varExpProj(day,1:2))),2),'% VAF)']}],'FontSize',14)
+title(['decoder day ',num2str(info.trialDay(day)-info.trialDay(1))],'FontSize',14)
+subtitle({['VAF = ', num2str(sum(abs(varExpProj(day,1:2))),2),'% | KLD = ',num2str(pwmeanKL(1,day),3)]},'FontSize',10)
 end
-% savepdf(gcf,'dpca_VAF')
-
+if saveGenFigure;savepdf(gcf,['dpca_all',num2str(i)]);end
+end
 %% Pearson correlation of session mean KL to VAF (compare to first session)
-% pwmeanKL obtained from pairwise_mean_KLD.m
-if ~exist('pwmeanKL','var')
-    run pairwise_mean_KLD.m
-end
+
+nPC = 2;
+
+VAF = sum(abs(varExpProj(:,1:nPC)),2);
+
 [corrout_dPCA,PVAL_dPCA] = corr(pwmeanKL(1,:)',VAF);
 fprintf('Pearson correlation of mean KL to VAF = %.3f, p = %.1e.\n', corrout_dPCA, PVAL_dPCA)
+
 figure(11)
+subplot(2,1,1)
 for day = 1:nday
-    scatter(pwmeanKL(1,day),VAF(day),30,k_cmp(day,:),'filled')
+    scatter(pwmeanKL(1,day),VAF(day),30,'k','filled')
     text(pwmeanKL(1,day),VAF(day)-2, ...
         num2str(info.trialDay(day)-info.trialDay(1)),'FontSize',16)
 end
@@ -148,28 +167,21 @@ title(['Pearson correlation = ',num2str(corrout_dPCA,2)])
 ylabel('VAF (%)');xlabel('mean KLD')
 axis([0 3 0 70])
 
-%% Pearson correlation of Angle Error to VAF
+% Pearson correlation of Angle Error to VAF
 mAE = zeros(nday,1);
-nPC = 2;
-VAF = sum(abs(varExpProj(:,1:nPC)),2);
 for day = 1:nday
     % trial indices for each day
     trialInds = csTPS(day)+1:csTPS(day+1);
     trialInds = trialInds(~event.excludeTrials(trialInds));
     mAE(day) = mean(extra.angleErrorPerTrial(trialInds));
 end
+
 [corr_AE, PVAL_AE] = corr(mAE,sum(abs(varExpProj(:,1:2)),2));
-fprintf('Pearson correlation of mean angle error to VAF = %.3f, p = %.1e.\n', corr_AE, PVAL_AE)
-figure(10)
+fprintf('Pearson correlation of mean angle error to AE = %.3f, p = %.1e.\n', corr_AE, PVAL_AE)
 
-if strcmp(info.participant,'T11');rmv = 20;else;rmv = 5;end
-k_cmp = brewermap(xticksday(end)+1+2*rmv,'RdYlBu');
-mid = ceil(length(k_cmp)/2);
-k_cmp(mid-rmv:mid+rmv,:)=[];
-k_cmp = vertcat(k_cmp(1,:)*0.5,k_cmp);
-
+subplot(2,1,2)
 for day = 1:nday
-    scatter(mAE(day),VAF(day),30,k_cmp(day,:),'filled')
+    scatter(mAE(day),VAF(day),30,'k','filled')
     text(mAE(day)-2,VAF(day)-2, ...
         num2str(info.trialDay(day)-info.trialDay(1)),'FontSize',16)
 end

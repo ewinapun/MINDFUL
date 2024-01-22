@@ -3,17 +3,24 @@ params.xlabelFromDay0 = 1;
 params.excludeNonTrials = 1;
 params.updateHz = 500;
 k = MINDFUL(NDzc, event, info, params, extra);
-[~, ind] = k.GetSessionData(init_day);
-header = ['session ',num2str(init_day)];
 
-% comment out if not selecting time steps
+% get a lagged version of Xhat
+Xhat = extra.cursorVel;
+lag = 1; 
+lagXhat = getlagX(Xhat, k.event.blockStartStop, lag);  
+Xhatnlag = [Xhat lagXhat];
+
+% setting PCA subspace
 subsampleAE_max = 4;
+[~, ind] = k.GetSessionData(init_day);
 ind = ind(k.extra.angleError(ind) < subsampleAE_max);
 refData = k.data(ind,:);
-header = [header,' AE < ', num2str(subsampleAE_max)];
+header = ['session ',num2str(init_day),' AE < ', num2str(subsampleAE_max)];
 
 k.CalculatePCA(refData, ind, header);
-k.CalcPairwiseDistanceParallel('ND',[Xhat(k.params.indSelected,:) lagXhat(k.params.indSelected,:)])
+
+% uses paarallel pool (parfor) to speed up computation
+k.CalcPairwiseDistanceParallel('ND',Xhatnlag(k.params.indSelected,:))
 
 % Supplemental plot pairwise KLD
 k.PlotDistance()
