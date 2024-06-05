@@ -3,7 +3,8 @@ function savepdf(gcf, filename, opt)
 % inputs:
 %     gcf       - Get handle to current figure
 %     filename  - filename of the figure to be saved
-%     opt       - 'alsofig': optional to also save as fig
+%     opt       - 'fig': optional to also save as fig
+                - 'png': optional to also save as png 
 
     if nargin < 3
         opt = '';
@@ -21,6 +22,7 @@ function savepdf(gcf, filename, opt)
     end
     % save as pdf
     set(gcf,'Units','inches');
+    set(gcf,'Color','white');
     set(gcf, 'InvertHardcopy', 'off');
     screenposition = get(gcf,'Position');
     set(gcf,...
@@ -28,7 +30,10 @@ function savepdf(gcf, filename, opt)
         'PaperSize',[screenposition(3:4)]);
     print(gcf, filename, '-dpdf', '-loose')
     disp(['Saving image as ',filename])
-    if strcmp(opt, 'alsofig')
+    if strcmp(opt, 'fig')
         saveas(gcf, filename,'fig')
+    end
+    if strcmp(opt, 'png')
+        saveas(gcf, filename,'png')
     end
 end

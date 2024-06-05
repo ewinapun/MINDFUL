@@ -20,7 +20,7 @@ classdef MINDFUL < handle
 %     k.CalculatePCA(refData, refInd, header)
 %     k.SetReference(refData, refInd, header)
 %     k.CalcDistanceFromData('filename')
-%     k.moveDirVectce()
+%     k.PlotDistance()
 
 % % % alternate outside for loop to calc distance with user input data
 % % sTo = [];
@@ -627,7 +627,7 @@ classdef MINDFUL < handle
         function lagX = getlagX(obj, X, startStop, lag)
             % pad with zeros for lag
             lagX = zeros(size(X));
-            for t = 1:length(startStop)
+            for t = 1:size(startStop,1)
                 start = startStop(t,1);
                 stop = startStop(t,2);
                 lagX(start+lag:stop,:)= X(start:stop-lag,:);
@@ -674,14 +674,14 @@ classdef MINDFUL < handle
             % ha = ttight_subplot(length(dfn)/2,2,0.1,[],0.1);
             % set line colors
             % bcolor = brewermap(length(fn)+5,'OrRd')*0.9;
-            ha = AnnotateDetails(obj, nsmooth);
+%             ha = AnnotateDetails(obj, nsmooth);
             c = get(groot,'DefaultAxesColorOrder'); 
             if length(fn) < 7
                 c = [c;c*0.6];
                 c(3,:) = [];
                 yaxiscolor = [c(1,:);c(2,:)];
             else
-                c = [c(1,:); cmap(length(fn)+3)*0.85];
+                c = [c(1,:); c(2,:); cmap(length(fn)+3)*0.8];
                 set(gcf, 'DefaultLineLineWidth',1.3);
                 yaxiscolor = [c(1,:);c(4,:)];
             end
@@ -706,7 +706,8 @@ classdef MINDFUL < handle
                 % plot median AE
                 y1 = movmean(obj.mAE, nsmooth,'omitnan');
                 y1(obj.params.NanInds) = NaN;
-                h(1) = plot(y1,'Color',c(1,:),'LineWidth',1);
+                h(1) = plot(y1,'Color',c(1,:),'LineWidth',2);
+                ylim([15, 150]) % to match between participants
                 axis tight
                 ylabel('Median AE')
 
@@ -714,23 +715,29 @@ classdef MINDFUL < handle
                 dispcorr = [];
                 for ii = 1:length(fn)
                     yyaxis left
+                    ylim([10 150])
                     y2 = obj.dist.(fn{ii}).(dfn{jj})(1,1:obj.n);
-                    [rp, rhos] = CalcDistCorr2mAE(obj, y2, nsmooth);
+                    [rp, rhos] = CalcDistCorr2mAE(obj, y2, 1);
                     dispcorr.Pearson(ii,1) = rp;
                     dispcorr.Spearman(ii,1) = rhos;
-                    if length(fn) < 8
+                    if length(fn) < 10
                         limAxis = double(axis);
                         str = [(fnDispName{ii}),' - {\it r} = ', num2str(rp,3),...
                                         '; \rho = ', num2str(rhos,3)];
-                        text(limAxis(2)*0.01,limAxis(3)+(limAxis(4)-limAxis(3))*(1-0.08*ii),...
-                            str,'fontsize',gca().FontSize,'color',c(1+ii,:))
+                        text(limAxis(2)*0.01,limAxis(3)+(limAxis(4)-limAxis(3))*(1-0.06*ii),...
+                            str,'fontsize',gca().FontSize*0.8,'color',c(1+ii,:))
+                    else
+                        legend(h(2:end),'FontSize',15,'Location','northwest')
+                        legend('boxoff')
                     end
                     hold on
                     yyaxis right
                     y2 = movmean(y2, nsmooth,'omitnan');
+                    fprintf('%.2f\n',prctile(y2,99.5))
+                    y2 = y2/prctile(y2,99.5);
                     y2(obj.params.NanInds) = NaN;
-                    h(ii+1)= plot(y2,'Color',c(ii+1,:),'Marker','none',...
-                                'DisplayName',fnDispName{ii});
+                    h(ii+1)= plot(y2,'Color',c(ii+1,:),'linestyle','-', ...
+                        'Marker','none','DisplayName',fnDispName{ii});
                     axis tight
                     if obj.params.setBtwDays2NaN
                         obj.AddTransitionLines
@@ -745,10 +752,6 @@ classdef MINDFUL < handle
                 xlim([1 obj.n])
                 title(dfnStr{jj})
                 ylabel(dfnStr{jj})
-            end
-            if length(fn) > 7
-                legend(h(2:end),'FontSize',15,'Location','northeast')
-                legend('boxoff')
             end
         end
         
@@ -837,7 +840,7 @@ classdef MINDFUL < handle
             end
         end
         
-        function PlotCompFnvsAE(obj, nsmooth, dfn, fn, fnDispName, axesFontsize)
+        function PlotCompFnvsAE(obj, nsmooth, dfn, fn, fnDispName, axesFontsize, same_ax_color)
         % generate subplots that compare different distance measures against
         % angular error, display their pearson correlation after smoothing with 
         % moving averaging
@@ -858,21 +861,26 @@ classdef MINDFUL < handle
             if any(~isfield(obj.dist, fn))
                 error('One or more fieldname does not exist in struct') 
             end
+            if nargin < 7; same_ax_color = true; end
             if nargin < 6; axesFontsize = 20; end
             if nargin < 5; fnDispName = fn; end
             if nargin < 3; dfn = []; end
             [dfn, dfnStr] = CheckDistanceName(dfn);
             if nargin < 2; nsmooth = 1; end
             
-            figure('Units','normalized','Position',[0 0 1 1], ...
-                'DefaultLineLineWidth',1, ...
-                'DefaultAxesFontsize',axesFontsize)
+            figure('Units','normalized',...
+                    'Position',[0 0 .65 .65], ...
+                    'DefaultLineLineWidth',1, ...
+                    'DefaultAxesFontsize',axesFontsize)
             
             AnnotateDetails(obj, nsmooth);
-            c = get(groot,'DefaultAxesColorOrder'); 
-            c = [c;c*0.6];
-            c(6,:) = [];
-            c(3,:) = [];
+            c = get(groot,'DefaultAxesColorOrder');
+            if same_ax_color
+                c = [c(1,:);repmat(c(2,:),length(fn),1)];
+            else
+                c(6,:) = [];c(3,:) = [];
+                c = [c;c*0.6]; 
+            end
 
             if isempty(obj.mAE) && ~isempty(obj.extra.angleError)
                 obj.GetMedianAEperSeg();
@@ -900,12 +908,13 @@ classdef MINDFUL < handle
                 plot(y1,'Color',c(1,:),'LineWidth',1);
                 axis tight
                 ylabel('Median AE')
+
                 % looping over different fieldname to compare
                 y2 = obj.dist.(fn{ii}).(dfn{1})(1,1:obj.n);
                 [rp, rhos, r_pval, rho_pval] = CalcDistCorr2mAE(obj, y2, nsmooth);
                 
                 yyaxis left
-%                 ylim([10, 150]) % to match between participants
+                ylim([15, 150]) % to match between participants
                 if length(fn) < 8
                     limAxis = double(axis);
                     str = ['$r$ = ', num2str(rp,2),';$\rho$ = ', num2str(rhos,2)];
@@ -913,14 +922,11 @@ classdef MINDFUL < handle
                         str,'fontsize',gca().FontSize,'color',c(1+ii,:), ...
                         'Fontweight','Bold','interpreter','latex')
                 end
-                hold on
-%                 axis tight
-                
+                hold on                
                 yyaxis right
                 y2 = movmean(y2, nsmooth,'omitnan');
                 y2(obj.params.NanInds) = NaN;
-                plot(y2,'Color',c(ii+1,:),...
-                            'DisplayName',fnDispName{ii});
+                plot(y2,'Color',c(ii+1,:),'DisplayName',fnDispName{ii});
                 axis tight
                 ylim([0 prctile(y2, 99.8)])
                 if obj.params.setBtwDays2NaN

@@ -6,9 +6,10 @@ filePath  = mfilename('fullpath');
 addpath(genpath(fileparts(fileparts(filePath))))
 
 % set up data path were the data is
-dirpath = 'Z:\data';
+dirpath = 'D:\data';
 participant = 'T11'; % T11 or T5
 path = [dirpath, filesep, participant, 'FixedDecoder'];
+% path = 'Z:\data\T11MultiTask1';
 saveGenFigure = 1; % set to true if want to save output figures
 
 % figure settings
