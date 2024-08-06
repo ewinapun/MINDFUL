@@ -118,8 +118,13 @@ info.usedBlocks = usedBlocks;
 info.sessionDates = [];
 info.trialDay = [];
 for i = 1:length(info.usedSessionList)
-    [info.trialDay(i), sdate] = GetTrialDay(info.usedSessionList{i});
-    info.sessionDates = [info.sessionDates;sdate];
+    if strcmp(info.usedSessionList{i}(1:4),'day_')
+        info.trialDay(i) = str2num(info.usedSessionList{i}(5:end))
+    else
+        [info.trialDay(i), sdate] = GetTrialDay(info.usedSessionList{i});
+        info.sessionDates = [info.sessionDates;sdate];
+    end
+
 end
 fprintf('\nDone\n')
 end
