@@ -6,10 +6,9 @@ filePath  = mfilename('fullpath');
 addpath(genpath(fileparts(fileparts(filePath))))
 
 % set up data path were the data is
-dirpath = 'D:\data';
+dirpath = 'Y:\TransferSpace\MINDFUL(2024)';
 participant = 'T11'; % T11 or T5
-path = [dirpath, filesep, participant, 'FixedDecoder'];
-% path = 'Z:\data\T11MultiTask1';
+path = [dirpath, filesep, participant];
 saveGenFigure = 1; % set to true if want to save output figures
 
 % figure settings
