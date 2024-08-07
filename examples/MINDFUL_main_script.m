@@ -7,9 +7,15 @@ addpath(genpath(fileparts(fileparts(filePath))))
 
 % set up data path were the data is
 dirpath = 'Y:\TransferSpace\MINDFUL(2024)';
+
+% specify which participant's data to load
 participant = 'T11'; % T11 or T5
+
+% concat path
 path = [dirpath, filesep, participant];
-saveGenFigure = 1; % set to true if want to save output figures
+
+% set to true if want to save output figures
+saveGenFigure = 1;
 
 % figure settings
 set(0,'defaultAxesFontSize',20)
