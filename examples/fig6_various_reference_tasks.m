@@ -60,8 +60,8 @@ switch ref_block
         % personal use
         path = personal_use_datapath;
         [refData, ~, refevent, ~, refextra] = ConcatSavedSessionsData(path, p);
-        % here trialStartStop refers to start stops of active cursor
-        % control, no explicit trials were cued in this dataset
+        % here trialStartStop refers to start stops of active cursor epochs
+        % no explicit trials were cued in this dataset
         ind = RowColon(refevent.trialStartStop(1:end,:));
         refXhat = refextra.cursorVel;
         reflagXhat = k.getlagX(refXhat, refevent.blockStartStop, lag);
@@ -77,16 +77,16 @@ switch ref_block
         reflagXhat = lagXhat(ind,:);
         % fitts
         path = rand_target_datapath;
-        [refData1, ~, refevent, ~, refextra] = ConcatSavedSessionsData(path, p);
+        [refData1, ~, refevent1, ~, refextra1] = ConcatSavedSessionsData(path, p);
         ind = [ind' length(ind) + (1:length(refData1))];
-        refXhat = [refXhat; refextra.cursorVel];
-        reflagXhat = [reflagXhat; k.getlagX(refextra.cursorVel, refevent.blockStartStop, lag)];
+        refXhat = [refXhat; refextra1.cursorVel];
+        reflagXhat = [reflagXhat; k.getlagX(refextra1.cursorVel, refevent1.blockStartStop, lag)];
         % personal use
         path = personal_use_datapath;
-        [refData2, ~, refevent, ~, refextra] = ConcatSavedSessionsData(path, p);
-        ind = [ind length(ind) + RowColon(refevent.trialStartStop(1:end,:))];
-        refXhat = [refXhat ; refextra.cursorVel];
-        reflagXhat = [reflagXhat; k.getlagX(refextra.cursorVel, refevent.blockStartStop, lag)];
+        [refData2, ~, refevent2, ~, refextra2] = ConcatSavedSessionsData(path, p);
+        ind = [ind length(ind) + RowColon(refevent2.trialStartStop(1:end,:))];
+        refXhat = [refXhat ; refextra2.cursorVel];
+        reflagXhat = [reflagXhat; k.getlagX(refextra2.cursorVel, refevent2.blockStartStop, lag)];
         % combine all
         refXhatnlag = [refXhat reflagXhat];
         refData = [refData;refData1;refData2];

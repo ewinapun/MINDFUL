@@ -201,12 +201,13 @@ for b = blocks
 
     %Concatenate data
     cat_ND = vertcat(cat_ND, data);
-    cat_labels = vertcat(cat_labels, labels);
-    cat_cursorVel = vertcat(cat_cursorVel, cursorVel);
-    
+    if exist('labels','var')
+        cat_labels = vertcat(cat_labels, labels);
+    end
+    if exist('cursorVel','var')
+        cat_cursorVel = vertcat(cat_cursorVel, cursorVel);
+    end
     cat_extra = ConcatStruct(cat_extra, extra);
-
-    clear data
     
     %Concatenate events data
     if exist('excludeTrials','var')
@@ -219,22 +220,23 @@ for b = blocks
     events.trialStartStop = vertcat(events.trialStartStop, ...
         startStops + events.pointsPerSession);
     trialLen = length(startStops);
-    blockStartStopInds = [1 size(labels,1)];
+    nPointsPerBlock = size(data, 1);
+    blockStartStopInds = [1 nPointsPerBlock];
     events.blockStartStop = vertcat(events.blockStartStop, ...
         blockStartStopInds + events.pointsPerSession);
     events.trialsPerSession = events.trialsPerSession + trialLen;
     events.trialsPerBlock = vertcat(events.trialsPerBlock, trialLen);
-    nPointsPerBlock = size(labels, 1);
     events.pointsPerSession = events.pointsPerSession + nPointsPerBlock;
     if exist('gestGoalState','var')
         events.gestGoalState = vertcat(events.gestGoalState , gestGoalState);
     end
-    blocknum = [blocknum; str2num(block_folder(7:end))]; 
+    blocknum = [blocknum; str2double(block_folder(7:end))]; 
     if isfield(p,'oneCalBlock') && p.oneCalBlock
         % just load one block from the session
         return
     end
     fprintf('\n[%s]', block_folder)
+    clear data
 end
 
 cat_extra.cursorVel = cat_cursorVel;
