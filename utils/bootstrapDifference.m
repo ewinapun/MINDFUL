@@ -4,9 +4,14 @@ function [sigdeltaPD, sigdeltaMD] = bootstrapDifference(tunings, refDay, n, alph
 % between two distributions of tuning contains zero
 % If the 95% confidence interval for the difference distribution does not contain 0, 
 % then we reject the null hypothesis at the 5% significance level. 
-% adopted method from  I. H. Stevenson et al., 
+
+% Adopted method from  I. H. Stevenson et al., 
 % "Statistical assessment of the stability of neural movement representations,” 
 % J. Neurophysiol., vol. 106, pp. 764–774, 2011, [Online]. 
+
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
 
 if nargin < 5; seed = 42; end
 if nargin < 4; alpha = 0.05; end

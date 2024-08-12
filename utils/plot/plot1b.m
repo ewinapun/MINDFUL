@@ -1,4 +1,22 @@
-function plot1b(k, sub_ind,ref_ind,titlestr,info)
+function plot1b(k, sub_ind, ref_ind, titlestr, info)
+% make scatter plot of median angle error against KL divergence
+
+% inputs:
+%   k 
+%       - MINDFUL class object
+%   sub_ind 
+%       - sub-selected indices
+%   ref_ind 
+%       - reference indices
+%   titlestr 
+%       - title string
+%   info
+%       - participant id for colors
+
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
+
 
 if strcmp(info.participant,'T11')
     color = [0.3725    0.3137    0.6275];

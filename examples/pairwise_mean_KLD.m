@@ -1,4 +1,12 @@
 %% calculate pairwise KL divergence
+% Code released with manuscript: Pun et al., "Measuring instability in 
+% multi-day human intracortical neural recordings towards stable, 
+% long-term brain-computer interfaces".
+%
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
+
 params.xlabelFromDay0 = 1;
 params.excludeNonTrials = 1;
 params.updateHz = 500;

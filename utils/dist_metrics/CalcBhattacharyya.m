@@ -1,6 +1,18 @@
 function Bhattdist = CalcBhattacharyya(pd1, pd2)
 % calculate Bhattacharyya distance for multivariate gaussian distributions
-    sigma = (pd1.sigma + pd2.sigma)/2;
+% pd1, pd2 are two estimated probability distribution structs from
+% ProbDistributionEst(X) containing the mean and covariance of data
+
+% Reference:
+% T. Kailath, "The Divergence and Bhattacharyya Distance Measures in 
+% Signal Selection," in IEEE Transactions on Communication Technology, 
+% vol. 15, no. 1, pp. 52-60, February 196
+
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
+
+sigma = (pd1.sigma + pd2.sigma)/2;
     [~,S,~] = svd(sigma);
     logdetsigma = sum(log(diag(S)));
     term1 = (pd2.mu - pd1.mu)'* inv(sigma) * (pd2.mu - pd1.mu)/8;

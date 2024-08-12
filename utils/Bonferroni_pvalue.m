@@ -27,7 +27,7 @@ function [final_pvalue, pvalues_matrix, F0_vec, F1_vec, betahat_2] = Bonferroni_
 %
 %--------------------------------------------------------------------------
 % History:
-%   2022   Copyright Mona, Ewina, All Rights Reserved
+%   2022   Copyright Mona Khoshnevis, Tsam Kiu Pun, Brown University.
 %--------------------------------------------------------------------------
 
 % augment Y1 and Y2 to include a bias term

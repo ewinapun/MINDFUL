@@ -22,11 +22,8 @@ function [data, bgzscoreExtra] = BGzscoreNew( data, opt )
 %       .avgData - The average for each feature
 %       .normData - The norm for each feature (e.g. std)
 %
-% History:
-%   2019.09.22   Created
-%   2023.08.10   Edited by Ewina Pun
 %
-%             Copyright Tommy Hosman, All Rights Reserved
+% Copyright Tommy Hosman, Brown University. All Rights Reserved
 %--------------------------------------------------------------------------
 
 

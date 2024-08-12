@@ -7,6 +7,10 @@ function dpcaOut = GenericDPCA(features, labels, events, window, margNames, dpca
 %   labels   [nSteps x nLabelDim] Or [nEvents x nLabelDim]
 %   events   [nEvents x 1]
 %   window   [nWin x 1]
+
+% Copyright Tommy Hosman, Tsam Kiu Pun, Brown University. All Rights Reserved
+%--------------------------------------------------------------------------
+
 if nargin < 5
     margNames = 'Stimulus';
 end

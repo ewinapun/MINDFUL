@@ -9,7 +9,7 @@ function colors = cmap(nColors, colorStyle, lightColorThresh)
 %
 %--------------------------------------------------------------------------
 % History:
-%   2021.06   Copyright Tommy Hosman, All Rights Reserved
+%   2021.06   Copyright Tommy Hosman, Brown University. All Rights Reserved
 %--------------------------------------------------------------------------
 
 

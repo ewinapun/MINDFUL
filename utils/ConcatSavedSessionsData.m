@@ -15,11 +15,10 @@ function [cat_ND, cat_labels, events, info, cat_extra] = ConcatSavedSessionsData
 %       - requestSessionNames 
 %           cell struct containing the requested session names
 %
-% History:
-%   2021.02.19   created by Ewina Pun
-%   2022.08.25   last edit by Ewina Pun
 %
-%   Copyright Ewina Pun, All Rights Reserved
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
 
 if nargin < 2
     p = []; 

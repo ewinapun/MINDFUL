@@ -1,9 +1,13 @@
 function [dpcaOut, firingRates, firingRatesAverage] = SetupAndComputedPCA(feat, labelGrp, p)
-% [dpcaOut, firingRates] = SetupAndComputedPCA(feat, labelGrp, p)
+
 % Given features [nTrial x nTime x nFeatures] and labelGrp [nTrial x nGroups] 
 % (sets of unique label index per group), this function arranges the data
 % in preparation for dPCA calls.
-% 
+
+% History:
+%   2016   Copyright Tommy Hosman, Brown University. All Rights Reserved
+%--------------------------------------------------------------------------
+
 HandleDependencies();
 if nargin < 1 && nargout == 0
     return

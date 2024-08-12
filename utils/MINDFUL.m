@@ -1,10 +1,9 @@
 classdef MINDFUL < handle
     
-% Monitoring Instability in Neural Data For Useful Long-term iBCI
+% MINDFUL: Monitoring Instability in Neural Data For Useful Long-term iBCI
 % a class to calculate and plot distribution distances with various metrics
-% addpath(genpath(fullfile('D:\Code\analysis\UserAnalysis\Ewina\DistMetric')))
+
 % example:
-%     event.blockStartStop = slc.blockStartStops;
 %     event.blkNum = blk;
 %     params.winlen = 1000;
 %     params.updateHz = 50;
@@ -22,22 +21,15 @@ classdef MINDFUL < handle
 %     k.CalcDistanceFromData('filename')
 %     k.PlotDistance()
 
-% % % alternate outside for loop to calc distance with user input data
-% % sTo = [];
-% % tic
-% % for j = 1:k.n
-% %     data2 = GetSegmentData(k,j);
-% %     st = k.CalcDistance(data2);
-% %     sTo = ConcatStruct(sTo, st);
-% % end
-% % k.dist = sTo;
-% % toc
-% 
-% History:
-%   2021.02.19   created by Ewina Pun
-%   2024.01.21   last edit by Ewina Pun
+
+% Code released with manuscript: Pun et al., "Measuring instability in 
+% multi-day human intracortical neural recordings towards stable, 
+% long-term brain-computer interfaces".
 %
-%   Copyright Ewina Pun, All Rights Reserved
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
+
 
     properties
         data            % neural data, [nSteps x nFeat]

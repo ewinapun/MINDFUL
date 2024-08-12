@@ -4,7 +4,11 @@ function savepdf(gcf, filename, opt)
 %     gcf       - Get handle to current figure
 %     filename  - filename of the figure to be saved
 %     opt       - 'fig': optional to also save as fig
-                - 'png': optional to also save as png 
+%               - 'png': optional to also save as png 
+
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
 
     if nargin < 3
         opt = '';

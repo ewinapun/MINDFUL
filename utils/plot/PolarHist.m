@@ -24,7 +24,9 @@ function [cnt, inds, outEdges] = PolarHist(ang, N, isDeg, logicalInds)
 %   edges       The edges in radians for each bin.
 % 
 % 
-% Written by: Tommy Hosman 12/21/2017
+% History:
+%   2017   Copyright Tommy Hosman, Brown University. All Rights Reserved
+%--------------------------------------------------------------------------
 
 %% Handle Inputs
 if ~exist('isDeg','var') || isempty(isDeg)

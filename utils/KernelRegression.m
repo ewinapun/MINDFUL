@@ -18,8 +18,8 @@ function [r, ci_diff, xi, bw] = KernelRegression(x, y, pnts, bw, alpha, varargin
 % interest are 'bandwidth' and 'kernel'. Do not use the arguments
 % 'function' or 'plotfcn'.
 
-
-% -----------
+%   2023 Copyright Mona Khoshnevis, Brown University. All Rights Reserved
+%--------------------------------------------------------------------------
 
 % check inputs dimension
 if isvector(x)

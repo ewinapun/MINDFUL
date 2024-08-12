@@ -1,5 +1,10 @@
 function [dfnNew, dfnStr] = CheckDistanceName(dfn)
-% ensure distance names are correctly spelled
+
+% Ensure distance names are correctly spelled
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
+
     alldfn = {'Jdiv','meanM','WcovM','KLdiv','Bhatt','Wass'};
     alldfnstr = {'Jeffrey''s divergence (symm KL)',...
                'Mean difference',...

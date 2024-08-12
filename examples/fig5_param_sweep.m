@@ -1,4 +1,12 @@
 %% params sweep
+% Code released with manuscript: Pun et al., "Measuring instability in 
+% multi-day human intracortical neural recordings towards stable, 
+% long-term brain-computer interfaces".
+%
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
+
 clear k params
 
 params.excludeNonTrials = 0; % change to true to exclude outlier trials

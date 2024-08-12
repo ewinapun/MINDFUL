@@ -9,6 +9,9 @@ function catStr = CatStrMatrix( m, betweenVal, padStr,varargin)
 % 
 % Note: If passed betweenVal that is empty, betweenVal uses the default.
 % If you want to concatenate strs with no space, use strcat.
+% History:
+%   2016   Copyright Tommy Hosman, Brown University. All Rights Reserved
+%--------------------------------------------------------------------------
 
 if nargin < 2 || isempty(betweenVal)
     betweenVal = {' | '};

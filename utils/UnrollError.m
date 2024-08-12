@@ -12,7 +12,8 @@ function errorStrOut = UnrollError( sError, useHyperlinks, printErr )
 % 
 % end
 %
-% Written by Tommy Hosman
+% Copyright Tommy Hosman, Brown University. All Rights Reserved
+%--------------------------------------------------------------------------
 
 
 % useHyperlinks in the output (this is so you can click on the error in the

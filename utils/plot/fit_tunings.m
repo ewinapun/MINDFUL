@@ -1,5 +1,12 @@
 %% calculate tunings and p-values
-isBootstrap = 0;
+
+% compute the cosine tunings and binned feature responses per session
+
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
+
+isBootstrap = 1;
 tstart = -5; % 100 ms before go cue
 tend = 50; % 1 second from go cue
 alltrialss = event.trialStartStop(~event.excludeTrials,:);
@@ -8,7 +15,7 @@ inds = RowColon([inds + tstart,inds + tend]);
 X1 = NDzc(inds,:);
 Y1 = labels(inds,:);
 tunings = [];
-for day = 1
+for day = 1:nday
     disp(day)
     inds = alltrialss(event.sessionNumberPerTrial(~event.excludeTrials)==day,1);
     inds = RowColon([inds + tstart,inds + tend]);
@@ -22,22 +29,27 @@ for day = 1
     tunings = ConcatStruct(tunings,tune,2);
 end
 tunings.b = reshape(tunings.b, [nfeats,3,nday]);
+
 if isBootstrap
-tunings.bootstrap.pd = reshape(tunings.bootstrap.pd, [nfeats,1000,nday]);
-tunings.bootstrap.md = reshape(tunings.bootstrap.md, [nfeats,1000,nday]);
+    tunings.bootstrap.pd = reshape(tunings.bootstrap.pd, [nfeats,1000,nday]);
+    tunings.bootstrap.md = reshape(tunings.bootstrap.md, [nfeats,1000,nday]);
 end
-% bin average feature values
-% pvalues_sigma = zeros(nfeats,nday);
-% pvalues_beta = zeros(nfeats,nday);
+
+%% bin average feature values with or without Nadaraya-Watson kernel regression
 clear binkr binavg
-for day = 1
+pvalues_sigma = zeros(nfeats,nday);
+pvalues_beta = zeros(nfeats,nday);
+
+for day = 1:nday
     disp(day)
     inds = alltrialss(event.sessionNumberPerTrial(~event.excludeTrials)==day,1);
     inds = RowColon([inds + tstart,inds + tend]);
     X2 = NDzc(inds,:);
     Y2 = labels(inds,:);
+% uncomment for getting p-values
 %     [final_pvalue, p_matrix, F0_vec, F1_vec, b] = Bonferroni_pvalue(X1,Y1,X2,Y2);
-%     pvalues_sigma(:,day) = p_matrix(:,1);pvalues_beta(:,day) = p_matrix(:,2);
+%     pvalues_sigma(:,day) = p_matrix(:,1);
+%     pvalues_beta(:,day) = p_matrix(:,2);
     [xi, means, ci] = getAvgBinFeatures(X2, Y2,'kernelSmooth',true);
     binkr.means(:,:,day) = means;
     binkr.CIs(:,:,day) = ci;
@@ -50,16 +62,7 @@ end
 tunings.binkr = binkr;
 tunings.binavg = binavg;
 % save('tunings_NDzc.mat','tunings','xticksday','tstart','tend')
-%%
-pt = PlotTunings(tunings);
-figure(106)
-set(gcf,'Units','inches','Position',[1 1 6 6])
-feat = 384; 
-pt.PlotExampleTuning(feat,'fig',subplot(2,1,1), ...
-    'style','kernreg', ...
-    'ylim', 1.2743, ...
-    'title',['Feat ',num2str(feat)], ...
-    'colorbar',xticksday);
+
 %%
 function [xi, means, ci] = getAvgBinFeatures(ND, labels, options)
     arguments
@@ -78,8 +81,7 @@ function [xi, means, ci] = getAvgBinFeatures(ND, labels, options)
     ci = zeros(nbins, nfeats); % confidence intervals
         
     if options.kernelSmooth
-    % using Nadaraya-Watson kernel regression
-        % repeat in range [x - 2pi, x, x + 2pi for accounting edge effect
+        % repeat in range [x - 2pi, x, x + 2pi] for accounting edge effect
         disp('running Nadaraya-Watson kernel regression')
         x = vertcat(angles-360, angles, angles+360);
 
@@ -89,7 +91,7 @@ function [xi, means, ci] = getAvgBinFeatures(ND, labels, options)
             [r, ci_diff, xi, bw] = KernelRegression(x, y, xi, options.bw, options.alpha);
             means(:,f) = r;
             ci(:,f) = ci_diff;
-            % bootstrap to get confidence intervals
+% bootstrap to get confidence intervals (not used)
 %             r_all = zeros(100, nbins);
 %             for b = 1:100
 %                 perm = randi(length(x),1,length(x));

@@ -48,7 +48,7 @@ function inds = RowColon( startStops, vectorize )
 %
 %--------------------------------------------------------------------------
 % History:
-%   2019   Copyright Tommy Hosman, All Rights Reserved
+%   2019   Copyright Tommy Hosman, Brown University. All Rights Reserved
 %--------------------------------------------------------------------------
 
 %% Handle inputs

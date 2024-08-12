@@ -12,7 +12,8 @@ function data = GaussSmooth2( data, standardDev_ms, dim, samplePeriod_ms, alpha 
 % 
 % History:
 %   2018   Update to use filter instead of conv which is faster
-%   2016   Copyright Tommy Hosman, All Rights Reserved
+%   2016   Copyright Tommy Hosman, Brown University. All Rights Reserved
+%--------------------------------------------------------------------------
 
 
 if ~exist('standardDev_ms','var') || isempty(standardDev_ms)

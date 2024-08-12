@@ -1,6 +1,12 @@
-%% code for figures in the MINDFUL paper
-% Copyright Ewina Pun, All Rights Reserved
+% Code released with manuscript: Pun et al., "Measuring instability in 
+% multi-day human intracortical neural recordings towards stable, 
+% long-term brain-computer interfaces".
+%
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
 
+%% User defined paths and options
 % add MINDFUL repo to path
 filePath  = mfilename('fullpath');
 addpath(genpath(fileparts(fileparts(filePath))))
@@ -26,6 +32,8 @@ set(groot,{'DefaultAxesXColor','DefaultAxesYColor','DefaultAxesZColor'},{'k','k'
 clear p
 p.zscoreFeatures = true; % set false for raw extract features
 p.trailingMoving = true; % set true for causal rolling z-score using movmean; set false for block batch z-score
+
+%% load data
 [NDzc, labels, event, info, extra] = ConcatSavedSessionsData(path, p);
 info.participant = participant;
 
@@ -36,6 +44,7 @@ elseif strcmp(info.participant,'T11')
     init_day = 1;
 end
 
+% init variables
 nfeats = size(NDzc,2);
 nday = size(event.sessionStartStop,1);
 xticksday = info.trialDay(1:end) - info.trialDay(1);

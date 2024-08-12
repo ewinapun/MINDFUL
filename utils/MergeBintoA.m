@@ -98,7 +98,9 @@ function a = MergeBintoA(a, b, options)
 % 
 % 
 % 
-% Written by Tommy Hosman 12/12/17
+% History:
+%   2017   Copyright Tommy Hosman, Brown University. All Rights Reserved
+%--------------------------------------------------------------------------
 
 
 %--------------------------------------------------------------------------

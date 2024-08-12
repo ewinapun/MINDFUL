@@ -20,8 +20,10 @@ classdef PlotTunings
 % PlotTunings             
 % PlotTuningsCompare      
 
-%   Copyright Ewina Pun, All Rights Reserved
-% -----------------------
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
+
     properties
         tunings (1,1) struct  % tunings struct
         nfeat (1,1) double    % number of features in tunings

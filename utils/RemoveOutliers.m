@@ -37,7 +37,7 @@ function [data, extra] = RemoveOutliers( data, opt )
 % History:
 %   2019.09.22   Created
 %
-%             Copyright Tommy Hosman, All Rights Reserved
+% Copyright Tommy Hosman, Brown University All Rights Reserved.
 %--------------------------------------------------------------------------
 
 

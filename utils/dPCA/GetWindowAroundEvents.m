@@ -48,7 +48,7 @@ function outputInds = GetWindowAroundEvents(events, window, removeLessThanEqZero
 %      6     8    10    18
 %
 % History:
-%   2016   Copyright Tommy Hosman, All Rights Reserved
+%   2016   Copyright Tommy Hosman, Brown University. All Rights Reserved
 %--------------------------------------------------------------------------
 
 

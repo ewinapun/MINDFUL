@@ -18,10 +18,9 @@ function plotPerformanceSummaryPerTrial(perf, info, events, params)
 % Output
 %   none
 %
-%--------------------------------------------------------------------------
-% History:
-%   2023.01   Copyright Ewina Pun, All Rights Reserved
-%--------------------------------------------------------------------------
+% Copyright Tsam Kiu Pun, 2023. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
 
 defaultParams.singleSession = 1;
 defaultParams.trialDay = [];

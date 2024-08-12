@@ -2,7 +2,10 @@ function sTo = ConcatStruct(sTo, sFrom, dim)
 % sTo = ConcatStruct(sTo, sFrom, dim)
 % sFrom -> sTo 
 % along dim if passed otherwise along the first non-singleton.
- 
+% 
+% Copyright Tommy Hosman, Brown University. All Rights Reserved
+%--------------------------------------------------------------------------
+
 
 if nargin < 3
     dim = [];

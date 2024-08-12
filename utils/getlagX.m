@@ -2,6 +2,10 @@ function lagX = getlagX(X, startStop, lag)
 % Define the function getlagX which needs three inputs: matrix X, matrix startStop and lag value
 % Note that it will pad the initial part of each specified segment with zeros due to the lag.
 
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
+% -------------------------------------------------------------------------
+
 %     check input shape
     if size(X,1)==1 || size(X,2)==1
         X = X(:);

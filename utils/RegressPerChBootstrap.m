@@ -30,7 +30,8 @@ function tunings = RegressPerChBootstrap(ND, labels, n, alpha, relativeMD)
 %   2021.02.19   created by Ewina Pun
 %   2023.06.22   last edit by Ewina Pun
 %
-%   Copyright Ewina Pun, All Rights Reserved
+% Copyright Tsam Kiu Pun, 2024. Brown University
+% tsam_kiu_pun@brown.edu
 % -------------------------------------------------------------------------
 
 
