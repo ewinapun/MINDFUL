@@ -272,7 +272,7 @@ classdef MINDFUL < handle
             if nargin < 2; filename = 'dist'; end
             
             % estimate distribution for data1
-            pd1 = ProbDistibutionEst(data1);
+            pd1 = ProbDistributionEst(data1);
             % dcat = [];
             tic
             statusprint = fprintf('Running 0 of %d', obj.n);
@@ -281,7 +281,7 @@ classdef MINDFUL < handle
                 statusprint = fprintf('Running %d of %d\n', i, obj.n);
                 [~, ind] = GetSegmentData(obj,i); % updateHz x #feats  
                 data2 = newdata(ind, :);
-                pd2 = ProbDistibutionEst(data2);
+                pd2 = ProbDistributionEst(data2);
                 d = CalcDistance(obj, pd1, pd2);
                 fn = fieldnames(d);
                 for f = 1:length(fn)
@@ -315,7 +315,7 @@ classdef MINDFUL < handle
             for i = 1:obj.n
                 [~, ind] = GetSegmentData(obj,i);
                 dataSeg = newdata(ind, :);
-                pd{i} = ProbDistibutionEst(dataSeg);
+                pd{i} = ProbDistributionEst(dataSeg);
             end
             
             tic
@@ -363,7 +363,7 @@ classdef MINDFUL < handle
             for i = 1:obj.n
                 [~, ind] = GetSegmentData(obj,i);
                 dataSeg = newdata(ind, :);
-                obj.pd{i} = ProbDistibutionEst(dataSeg);
+                obj.pd{i} = ProbDistributionEst(dataSeg);
             end
             tic
             dcatdim2 = [];
@@ -410,7 +410,7 @@ classdef MINDFUL < handle
             % data2 is a m x d matrix of m iid d-dim multivariate normal random vectors
             
             % can also take in pd struct as data1 and data2
-            % pd = ProbDistibutionEst(data)
+            % pd = ProbDistributionEst(data)
             % d = CalcDistance(obj, pd1, pd2)
             if nargin < 3
                 data2 = data1;
@@ -421,7 +421,7 @@ classdef MINDFUL < handle
                 if size(data1, 1) < size(data1, 2)
                     data1 = data1';
                 end
-                pd1 = ProbDistibutionEst(data1);
+                pd1 = ProbDistributionEst(data1);
             elseif isstruct(data1)
                 pd1 = data1;
             else
@@ -432,7 +432,7 @@ classdef MINDFUL < handle
                 if size(data2, 1) < size(data2, 2)
                     data2 = data2';
                 end
-                pd2 = ProbDistibutionEst(data2);
+                pd2 = ProbDistributionEst(data2);
             elseif isstruct(data2)
                 pd2 = data2;
             else

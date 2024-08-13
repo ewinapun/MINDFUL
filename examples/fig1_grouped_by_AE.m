@@ -21,14 +21,14 @@ sTo = [];
 AErange = (0:4:180-4);
 AErange = [AErange;AErange+4]';
 data_after_pca = k.PCAtransform(k.data);
-ref_pd = ProbDistibutionEst(data_after_pca(ref_ind,:));
+ref_pd = ProbDistributionEst(data_after_pca(ref_ind,:));
 statusprint = fprintf('Running 0 of %d', length(AErange));
 for j = 1:length(AErange)-1
 % group by even AE interval
     fprintf(repmat('\b',1,statusprint))
     statusprint = fprintf('Running %d of %d\n', j, length(AErange));
     ind = find(ae>=AErange(j,1) & ae<AErange(j,2));
-    pd = ProbDistibutionEst(data_after_pca(ind,:));
+    pd = ProbDistributionEst(data_after_pca(ind,:));
     st = k.CalcDistance(ref_pd, pd);
     st.mAE = mean(ae(ind));
     sTo = ConcatStruct(sTo, st);

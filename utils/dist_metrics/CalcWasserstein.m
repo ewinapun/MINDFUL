@@ -1,10 +1,12 @@
 function [WDist, meanM, WcovM] = CalcWasserstein(pd1, pd2)
-% calculate Wasserstein distance for multivariate gaussian
-% distributions
+% calculate Wasserstein distance for multivariate gaussian distributions,
+% namely pd1, pd2, estimated ProbDistributionEst(). 
+% Each containing the estimated mean, covariance, and log determinant of 
+% the covariance matrix.
 
-% What is an estimate of the Wasserstein distance between the distributions
-% of X and Y using the code linked in the article Random  Matrix-Improved  
-% Estimation  of  the  Wasserstein  Distance between  two  Centered  Gaussian  
+% Reference:
+% Adopted code using the code linked in the article Random Matrix-Improved  
+% Estimation of the Wasserstein Distance between two Centered Gaussian  
 % Distributions (Malik TIOMOKO & Romain Couillet)
 % https://github.com/maliktiomoko/RMTWasserstein
 %
